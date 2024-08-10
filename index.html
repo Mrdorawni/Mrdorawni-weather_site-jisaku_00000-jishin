@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>震度分布図</title>
+        <meta charset="UTF-8">
+        <meta neme="viewport" content="width=divice-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="source/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="source/leaflet-src.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <div id="map"></div>
+        <div class="btns">
+            <select id="quakelist"><option>地震情報の取得中…</option></select>
+            <span class="setsumei" style="padding: 0;padding-right: 5px;"><button id="reload">情報更新</button> <input type="number" id="reload_num" value="20" max="100">件</span>
+        </div>
+        <script src="source/JMAPoints.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
