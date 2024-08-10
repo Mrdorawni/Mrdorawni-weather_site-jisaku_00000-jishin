@@ -117,7 +117,7 @@ L.control.layers({
     "単色(black)": base,
     "地理院地図(淡色)": tanshoku,
     "地理院地図(標準)": hyojun,
-    "地理院地図(航空)": hyojun,  
+    "地理院地図(航空)": chiri_img,  
 }).addTo(map);
 
 $.getJSON("source/prefectures.geojson", function (data) {
