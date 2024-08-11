@@ -33,6 +33,7 @@ map.createPane("shindo55").style.zIndex = 55;
 map.createPane("shindo60").style.zIndex = 60;
 map.createPane("shindo70").style.zIndex = 70; //ここまで震度
 map.createPane("shingen").style.zIndex = 100; //震源
+map.createPane("nankai").style.zIndex = 8; //南海トラフ
 map.createPane("tsumami_map").style.zIndex = 110; //津波
 
 var PolygonLayer_Style_nerv_1 = {
@@ -59,6 +60,13 @@ var PolygonLayer_Style_nerv_W = {
     "fillColor": "#4F617B",
     "fillOpacity": 1
 }
+var nankai = {
+    "color": "#000000",
+    "weight": 1.0,
+    "opacity": 1,
+    "fillColor": "#FFFF00",
+    "fillOpacity": 0.5
+}
 //日本境
 var nihon = {
     "color": "#9C9E9B",
@@ -81,6 +89,14 @@ $.getJSON("source/prefectures2.geojson", function (data) {
         style: PolygonLayer_Style_nerv_W
     }).addTo(map);
 });
+
+$.getJSON("source/nankai.geojson", function (data) {
+    L.geoJson(data, {
+        pane: "nankai",
+        style: nankai
+    }).addTo(map);
+});
+
 //自作geojson
 var base = L.tileLayer('', {
     pane: "pane_map",
@@ -89,6 +105,30 @@ var base = L.tileLayer('', {
 }).addTo(map);
 
 //ここからタイルマップ
+
+var google1 = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://www.google.com/maps" target="_blank">googleマップ</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+});
+
+var google2 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://www.google.com/maps" target="_blank">googleマップ</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+}); //最初に表示させるタイルに addTo() をつける
+
+var google3 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://www.google.com/maps" target="_blank">googleマップ</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+});
+
+var google4 = L.tileLayer('https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://www.google.com/maps" target="_blank">googleマップ</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+});
 
 var tanshoku = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
     pane: "pane_map",
@@ -102,7 +142,19 @@ var hyojun = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.p
     attribution: '地図情報:<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
 });
 
-var chiri_img = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+var dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://carto.com/" target="_blank">CARTO Dark</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+});
+
+var inei = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png', {
+    pane: "pane_map",
+    style: PolygonLayer_Style_nerv_1,
+    attribution: '地図情報:<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
+});
+
+var hyoko_color = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png', {
     pane: "pane_map",
     style: PolygonLayer_Style_nerv_1,
     attribution: '地図情報:<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>、地震・津波情報:<a href="https://www.p2pquake.net/" target="_blank">P2P地震情報</a>'
@@ -112,12 +164,18 @@ var chiri_img = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/
 
 
 
-
 L.control.layers({
     "単色(black)": base,
+    "地図": google1,  
+    "航空写真": google2,
+    "航空+地図": google3,
+    "地図(透過)": google4,
     "地理院地図(淡色)": tanshoku,
     "地理院地図(標準)": hyojun,
-    "地理院地図(航空)": chiri_img,  
+    "CARTO Dark": dark,
+    "地理院陰影起伏図": inei,
+    "地理院色別標高図": hyoko_color,
+    
 }).addTo(map);
 
 $.getJSON("source/prefectures.geojson", function (data) {
@@ -275,7 +333,7 @@ function QuakeSelect(num) {
                 let shindoIcon = L.icon({
                     iconUrl: ImgUrl,
                     iconSize: [40, 40],
-                    popupAnchor: [0, -15]
+                    popupAnchor: [0, -10]
                 });
                 let shindoIcon_big = L.icon({
                     iconUrl: ImgUrl,
